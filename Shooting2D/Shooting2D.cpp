@@ -117,8 +117,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
       L"2D Shooting for GDI+",                  // 제목을 설정할때 앞에 L을 붙혀야한다.
       // WS_OVERLAPPEDWINDOW 에서 WS_MAXIMIZEBOX(최대화 버튼 비활성화)와 WS_THICKFRAME(테두리 잡고 크기 변경 금지)만 제외
       WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX & ~WS_THICKFRAME,    
-      500, 100,                                 // 시작 좌표(스크린 좌표계)
-      400, 300,                                 // 스크린 크기
+      620, 200,                                 // 시작 좌표(스크린 좌표계)
+      600, 600,                                 // 스크린 크기
       nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
@@ -132,16 +132,21 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    return TRUE;
 }
 
-//
+
+int RectX = 120;
+int RectY = 150;
+
+
+Gdiplus::Point points[] = {
+Gdiplus::Point(150, 50), 
+Gdiplus::Point(220,150), 
+Gdiplus::Point(80,150) };
+
 //  함수: WndProc(HWND, UINT, WPARAM, LPARAM)
-//
 //  용도: 주 창의 메시지를 처리합니다.
-//
 //  WM_COMMAND  - 애플리케이션 메뉴를 처리합니다.
 //  WM_PAINT    - 주 창을 그립니다.
 //  WM_DESTROY  - 종료 메시지를 게시하고 반환합니다.
-//
-//
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
@@ -163,6 +168,50 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
         }
         break;
+    case WM_KEYDOWN:
+        switch (wParam)
+        {
+        case VK_LEFT : 
+            OutputDebugStringW(L"왼쪽 키를 눌렀다.\n");
+            RectX -= 10;
+            for (int i = 0; i < 3; i++)
+            {
+                points[i].X -= 10;
+            }
+            InvalidateRect(hWnd, nullptr, TRUE);    // 창을 다시 그리도록 요청(WM_PAINT 메세지가 들어간다)
+            break;
+        case VK_RIGHT : 
+            OutputDebugStringW(L"오른쪽 키를 눌렀다.\n");
+            RectX += 10;
+            for (int i = 0; i < 3; i++)
+            {
+                points[i].X += 10;
+            }
+            InvalidateRect(hWnd, nullptr, TRUE);    // 창을 다시 그리도록 요청(WM_PAINT 메세지가 들어간다)
+            break;
+        case VK_UP : 
+            OutputDebugStringW(L"윗쪽 키를 눌렀다.\n");
+            RectY -= 10;
+            for (int i = 0; i < 3; i++)
+            {
+                points[i].Y -= 10;
+            }
+            InvalidateRect(hWnd, nullptr, TRUE);    // 창을 다시 그리도록 요청(WM_PAINT 메세지가 들어간다)
+            break;
+        case VK_DOWN : 
+            OutputDebugStringW(L"아래쪽 키를 눌렀다.\n");
+            RectY += 10;
+            for (int i = 0; i < 3; i++)
+            {
+                points[i].Y += 10;
+            }
+            InvalidateRect(hWnd, nullptr, TRUE);    // 창을 다시 그리도록 요청(WM_PAINT 메세지가 들어간다)
+            break;
+        case VK_ESCAPE:
+            DestroyWindow(hWnd);    // hWnd 창을 닫아라 -> 프로그램을 꺼라(WM_DESTROY메세지가 들어간다.)
+            break;
+        }
+        break;
     case WM_PAINT:
         {
             PAINTSTRUCT ps;
@@ -172,50 +221,30 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             Gdiplus::Graphics GraphicsInstance(hdc);        // Graphics객체 만들기
 
             Gdiplus::SolidBrush RedBrush(Gdiplus::Color(100, 255, 0, 0));
-            GraphicsInstance.FillRectangle(&RedBrush, 200, 50, 60, 120);
+            //GraphicsInstance.FillRectangle(&RedBrush, 200, 50, 60, 120);
 
-            // 간단실습
-            // 1. 파란색 원 그리기
             Gdiplus::SolidBrush BlueBrush(Gdiplus::Color(150, 0, 0, 255));
-            GraphicsInstance.FillEllipse(&BlueBrush, 150, 100, 100, 100);
+            //GraphicsInstance.FillEllipse(&BlueBrush, 150, 100, 100, 100);
 
             Gdiplus::Pen BluePen(Gdiplus::Color(255, 0, 0, 255), 2.0f);
-            GraphicsInstance.DrawEllipse(&BluePen, 50, 50, 60, 60);
+            //GraphicsInstance.DrawEllipse(&BluePen, 50, 50, 60, 60);
 
-            // 2. 기타 도형 그려보기
-            Gdiplus::Point points[] = {
-            Gdiplus::Point(150, 50), 
-            Gdiplus::Point(250,150), 
-            Gdiplus::Point(50,150) };
+            // 2. 집모양
             GraphicsInstance.FillPolygon(&BlueBrush, points, 3);
 
-            GraphicsInstance.DrawRectangle(&BluePen, 70, 100, 60, 50);
+            GraphicsInstance.DrawRectangle(&BluePen, RectX, RectY, 60, 50);
 
-            GraphicsInstance.FillPie(&RedBrush, 300, 50, 50, 50, 90.0f, 270.0f);
+            //GraphicsInstance.FillPie(&RedBrush, 300, 50, 50, 50, 90.0f, 270.0f);
 
-            Gdiplus::GraphicsPath Path;
-            Path.AddLine(Gdiplus::Point(10, 10), Gdiplus::Point(300, 10));
-            Path.AddLine(Gdiplus::Point(300, 10), Gdiplus::Point(300, 100));
-            GraphicsInstance.FillPath(&RedBrush, &Path);
+            //Gdiplus::GraphicsPath Path;
+            //Path.AddLine(Gdiplus::Point(10, 10), Gdiplus::Point(300, 10));
+            //Path.AddLine(Gdiplus::Point(300, 10), Gdiplus::Point(300, 100));
+            //GraphicsInstance.FillPath(&RedBrush, &Path);
 
             EndPaint(hWnd, &ps);
         }
         break;
-    case WM_KEYDOWN:
-        switch (wParam)
-        {
-        case VK_LEFT : 
-            OutputDebugStringW(L"왼쪽 키를 눌렀다.\n");
-            InvalidateRect(hWnd, nullptr, TRUE);    // 창을 다시 그리도록 요청(WM_PAINT 메세지가 들어간다)
-            break;
-        case VK_RIGHT : 
-            OutputDebugStringW(L"오른쪽 키를 눌렀다.\n");
-            break;
-        case VK_ESCAPE:
-            DestroyWindow(hWnd);    // hWnd 창을 닫아라 -> 프로그램을 꺼라(WM_DESTROY메세지가 들어간다.)
-            break;
-        }
-        break;
+    
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
