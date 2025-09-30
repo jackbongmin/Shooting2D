@@ -47,7 +47,8 @@ void Player::Render(Gdiplus::Graphics* InGraphics)
         Gdiplus::SolidBrush RedBrush(Gdiplus::Color(255, 255, 0, 0));
         InGraphics->FillEllipse(
             &RedBrush,
-            100, 100,
+            static_cast<int>(Position.X - PixelSize * Pivot.X),    // 그려질 위치
+            static_cast<int>(Position.Y - PixelSize * Pivot.Y),
             PixelSize, PixelSize);
     }
 }
@@ -77,23 +78,5 @@ void Player::HandleKeyState(WPARAM InKey, bool InIsPressed)
             }
             InvalidateRect(g_hMainWindow, nullptr, FALSE);
         }
-        //if (InKey == VK_LEFT)
-        //{
-        //    Position.X -= Speed;
-        //    if (Position.X < (0 + PixelSize))
-        //    {
-        //        Position.X = (0 + PixelSize);
-        //    }
-        //    InvalidateRect(g_hMainWindow, nullptr, FALSE);
-        //}
-        //else if (InKey == VK_RIGHT)
-        //{
-        //    Position.X += Speed;
-        //    if (g_ScreenSize.X < (Position.X - PixelSize))
-        //    {
-        //        Position.X = static_cast<float>(g_ScreenSize.X - PixelSize);
-        //    }
-        //    InvalidateRect(g_hMainWindow, nullptr, FALSE);
-        //}
     }
 }

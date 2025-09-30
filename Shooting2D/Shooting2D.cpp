@@ -4,6 +4,7 @@
 #include "framework.h"
 #include "Shooting2D.h"
 
+
 //#include <crtdbg.h>
 //#define _CRTDBG_MAP_ALLOC
 //#define new new(_NORMAL_BLOCK, __FILE__,__LINE__)
@@ -14,6 +15,7 @@
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
+
 
 HWND g_hMainWindow = nullptr;
 
@@ -35,6 +37,9 @@ Gdiplus::Graphics* g_BackBufferGraphics = nullptr;  // 백버퍼용 종이에 �
 
 
 Player* g_Player = nullptr;
+BackGround* g_BackGround = nullptr;
+BackGround* g_BackGround2 = nullptr; 
+
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -60,6 +65,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 
     g_Player = new Player(L"./Images/Airplane.png");
+    g_BackGround = new BackGround(L"./Images/Background.png");
 
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -92,10 +98,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 DispatchMessage(&msg);
             }
         }
+        g_BackGround->MoveDown();
+        InvalidateRect(g_hMainWindow, nullptr, FALSE);
     }
 
     delete g_Player;
     g_Player = nullptr;
+    delete g_BackGround;
+    g_BackGround = nullptr;
 
     // GDI+ 정리하기
     Gdiplus::GdiplusShutdown(Token);
@@ -229,10 +239,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 }
                 g_BackBufferGraphics->DrawPolygon(&GreenPen, Positions, g_HouseVerticesCount);
 
+                for (int x = 0; x < 10; x++)
+                {
+                    for (int y = 0; y < 16; y++)
+                    {
+                        g_BackGround->Render(g_BackBufferGraphics, 60 * x, 60 * y);
+                    }
+                }
+
                 g_Player->Render(g_BackBufferGraphics);
 
                 Gdiplus::Graphics GraphicsInstance(hdc);    // Graphics객체 만들기(hdc에 그리기 위한 도구)
                 GraphicsInstance.DrawImage(g_BackBuffer, 0, 0);
+                
 
             }
 
