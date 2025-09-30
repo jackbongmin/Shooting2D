@@ -62,21 +62,38 @@ void Player::HandleKeyState(WPARAM InKey, bool InIsPressed)
         if (InKey == VK_LEFT)
         {
             Position.X -= Speed;
-            if (Position.X < 0)
+            if (Position.X < (0 - PixelSize))
             {
-                Position.X = (0 + PixelSize);
+                Position.X = static_cast<float>(g_ScreenSize.X + PixelSize);
             }
             InvalidateRect(g_hMainWindow, nullptr, FALSE);
         }
         else if (InKey == VK_RIGHT)
         {
             Position.X += Speed;
-            if (g_ScreenSize.X < Position.X)
+            if (g_ScreenSize.X < (Position.X - PixelSize))
             {
-                Position.X = static_cast<float>(g_ScreenSize.X - PixelSize);
+                Position.X = (0 - PixelSize);
             }
             InvalidateRect(g_hMainWindow, nullptr, FALSE);
         }
+        //if (InKey == VK_LEFT)
+        //{
+        //    Position.X -= Speed;
+        //    if (Position.X < (0 + PixelSize))
+        //    {
+        //        Position.X = (0 + PixelSize);
+        //    }
+        //    InvalidateRect(g_hMainWindow, nullptr, FALSE);
+        //}
+        //else if (InKey == VK_RIGHT)
+        //{
+        //    Position.X += Speed;
+        //    if (g_ScreenSize.X < (Position.X - PixelSize))
+        //    {
+        //        Position.X = static_cast<float>(g_ScreenSize.X - PixelSize);
+        //    }
+        //    InvalidateRect(g_hMainWindow, nullptr, FALSE);
+        //}
     }
 }
-
