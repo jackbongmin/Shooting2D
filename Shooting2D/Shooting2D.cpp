@@ -36,7 +36,8 @@ Gdiplus::Graphics* g_BackBufferGraphics = nullptr;  // 백버퍼용 종이에 �
 
 Player* g_Player = nullptr;
 Background* g_Background = nullptr;
-
+TestGridActor* g_TestGridActor = nullptr;
+TestHouseActor* g_TestHouseActor = nullptr;
 
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
@@ -64,6 +65,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     g_Player = new Player(L"./Images/Airplane.png");
     g_Background = new Background(L"./Images/Background.png");
+    g_TestGridActor = new TestGridActor();
+    g_TestHouseActor = new TestHouseActor();
+    g_TestHouseActor->SetPosition(200, 200);
+    g_TestHouseActor->SetPivot(1.0f, 1.0f);
 
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -108,6 +113,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         InvalidateRect(g_hMainWindow, nullptr, FALSE); // 매 프레임마다 WM_PAINT요청
     }
 
+    delete g_TestHouseActor;
+    g_TestHouseActor = nullptr;
+    delete g_TestGridActor;
+    g_TestGridActor = nullptr;
     delete g_Background;
     g_Background = nullptr;
     delete g_Player;
@@ -223,33 +232,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             if (g_BackBufferGraphics)   // g_BackBufferGraphics 필수
             {
                 g_BackBufferGraphics->Clear(Gdiplus::Color(255, 0, 0, 0));
-                Gdiplus::SolidBrush GreenBrush(Gdiplus::Color(255, 0, 255, 0));
-                Gdiplus::SolidBrush BlueBrush(Gdiplus::Color(255, 0, 0, 255));
-                Gdiplus::SolidBrush YelloBrush(Gdiplus::Color(255, 255, 255, 0));
-                Gdiplus::SolidBrush WhiteBrush(Gdiplus::Color(255, 255, 255, 255));
 
                 g_Background->OnRender(g_BackBufferGraphics);
-                for (int x = 0; x < 17; x++)
-                {
-                    for (int y = 0; y < 16; y++)
-                    {
-                        g_BackBufferGraphics->FillRectangle(&YelloBrush, 50 * x, 50 * y, 5, 5);
-                    }
-                }
-
-                Gdiplus::Pen GreenPen(Gdiplus::Color(255, 0, 255, 0), 2.0f);
-                Gdiplus::Pen WhitePen(Gdiplus::Color(255, 255, 255, 255), 2.0f);
-                Gdiplus::Point Positions[g_HouseVerticesCount];
-                for (int i = 0; i < g_HouseVerticesCount; i++)
-                {
-                    Positions[i] = g_HousePosition + g_HouseVertices[i];
-                }
-                g_BackBufferGraphics->DrawPolygon(&GreenPen, Positions, g_HouseVerticesCount);
-
+                g_TestGridActor->OnRender(g_BackBufferGraphics);
+                g_TestHouseActor->OnRender(g_BackBufferGraphics);
 
                 g_Player->OnRender(g_BackBufferGraphics);
 
-                Gdiplus::Graphics GraphicsInstance(hdc);    // Graphics객체 만들기(hdc에 그리기 위한 도구)
+                Gdiplus::Graphics GraphicsInstance(hdc);    // Graphics객체 만들기(hdc에 그리기 위한 도구 만들기)
                 GraphicsInstance.DrawImage(g_BackBuffer, 0, 0);
 
             }
