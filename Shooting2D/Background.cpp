@@ -1,4 +1,5 @@
 #include "Background.h"
+#include "GameManager.h"
 
 Background::Background(const wchar_t* InImagePath)
     :Actor(InImagePath)
@@ -19,16 +20,16 @@ void Background::OnRender(Gdiplus::Graphics* InGraphics)
     {
         // Image가 로딩되어 있다.
         int NewY = static_cast<int>(Position.Y - Size * Pivot.Y + Offset);
-        if (Offset > g_ScreenSize.Y)
+        if (Offset > GameManager::ScreenHeight)
         {
             Offset = -static_cast<float>(Size);
         }
 
-        int WidthCount = g_ScreenSize.X / Size + 1;     // +1은 화면 밖까지 타일을 그리기 위해 추가
-        int HeightCount = g_ScreenSize.Y / Size + 2;    // +2는 화면 밖까지 타일을 그리기 위해 추가
-        int TotalHeight = (Size - 3) * HeightCount;
+        int WidthCount = GameManager::ScreenWidth / Size + 1;     // +1은 화면 밖까지 타일을 그리기 위해 추가
+        int HeightCount = GameManager::ScreenHeight / Size + 2;    // +2는 화면 밖까지 타일을 그리기 위해 추가
+        int TotalHeight = (Size - PixelGap) * HeightCount;
 
-        for (int y = -2; y < HeightCount; y++)
+        for (int y = -1; y < HeightCount; y++)
         {
             for (int x = 0; x < WidthCount; x++)
             {
@@ -39,10 +40,10 @@ void Background::OnRender(Gdiplus::Graphics* InGraphics)
                     NewY,
                     Size, Size);  // 그려질 사이즈
             }
-            NewY += (Size - 3);
+            NewY += (Size - PixelGap);
             if (NewY > TotalHeight)
             {
-                NewY -= (TotalHeight + Size);
+                NewY -= (TotalHeight + (Size - PixelGap));
             }
         }
     }

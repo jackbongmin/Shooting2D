@@ -10,7 +10,7 @@ TestHouseActor::TestHouseActor()
     {
         if (Max < Pos.X)
         {
-            Max = Pos.X;
+            Max = static_cast<int>(Pos.X);
         }
     }
     Size = Max;
@@ -24,9 +24,6 @@ TestHouseActor::~TestHouseActor()
 
 void TestHouseActor::OnRender(Gdiplus::Graphics* InGraphics)
 {
-    //static_cast<int>(Position.X - Size * Pivot.X),    // 그려질 위치
-    //    static_cast<int>(Position.Y - Size * Pivot.Y),
-
     PointF Positions[HouseVerticesCount];
     for (int i = 0; i < HouseVerticesCount; i++)
     {
