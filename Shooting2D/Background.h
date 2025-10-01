@@ -12,7 +12,7 @@ public:
 	void Render(Gdiplus::Graphics* InGraphics);
 
 private:
-	// 플레이어가 그려질 크기
+
 	static constexpr int PixelSize = 64;
 
 	// 중심점
