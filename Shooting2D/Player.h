@@ -1,14 +1,11 @@
 #pragma once
 #include <unordered_map>
-#include <Windows.h>
-#include <gdiplus.h>
+
 #include "enums.h"
+#include "Common.h"
 
-//extern : 뒤에 있는 변수가 다른 파일에 선언 되어 있다.
-extern HWND g_hMainWindow; // g_hMainWindow가 다른 파일에 있다는 것을 알려줌
-extern Gdiplus::Point g_ScreenSize;
 
-using PointF = Gdiplus::PointF;
+
 class Player
 {
 	/*
@@ -25,6 +22,8 @@ public:
 	~Player();
 
 	void Render(Gdiplus::Graphics* InGraphics);
+
+	void Tick(float InDeltaTime);
 
 	void HandleKeyState(WPARAM InKey, bool InIsPressed);
 
@@ -46,7 +45,7 @@ private:
 	PointF Position = { 0.0f, 0.0f };
 
 	// 플레이어의 이동속도
-	float Speed = 10.0f;
+	float Speed = 100.0f;
 };
 
 

@@ -35,6 +35,9 @@ Gdiplus::Graphics* g_BackBufferGraphics = nullptr;  // 백버퍼용 종이에 �
 
 
 Player* g_Player = nullptr;
+Background* g_Background = nullptr;
+
+
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -60,6 +63,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 
     g_Player = new Player(L"./Images/Airplane.png");
+    g_Background = new Background(L"./Images/Background.png");
 
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -75,6 +79,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SHOOTING2D));
 
     MSG msg;
+    ULONGLONG LastTime = GetTickCount64();
 
     // 3. 메시지 루프
     // 기본 메시지 루프입니다:(메세지 큐에 들어온 메세지들을 하나씩 처리하는 부분)
@@ -92,8 +97,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 DispatchMessage(&msg);
             }
         }
+
+        ULONGLONG CurrentTime = GetTickCount64();
+        float DeltaTime = (CurrentTime - LastTime) / 1000.0f;   // 결과를 초 단위로 변경
+        LastTime = CurrentTime;
+
+        g_Background->Tick(DeltaTime);
+        g_Player->Tick(DeltaTime);
+
+        InvalidateRect(g_hMainWindow, nullptr, FALSE); // 매 프레임마다 WM_PAINT요청
     }
 
+    delete g_Background;
+    g_Background = nullptr;
     delete g_Player;
     g_Player = nullptr;
 
@@ -212,6 +228,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 Gdiplus::SolidBrush YelloBrush(Gdiplus::Color(255, 255, 255, 0));
                 Gdiplus::SolidBrush WhiteBrush(Gdiplus::Color(255, 255, 255, 255));
 
+                g_Background->Render(g_BackBufferGraphics);
                 for (int x = 0; x < 17; x++)
                 {
                     for (int y = 0; y < 16; y++)
@@ -228,6 +245,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     Positions[i] = g_HousePosition + g_HouseVertices[i];
                 }
                 g_BackBufferGraphics->DrawPolygon(&GreenPen, Positions, g_HouseVerticesCount);
+
 
                 g_Player->Render(g_BackBufferGraphics);
 
