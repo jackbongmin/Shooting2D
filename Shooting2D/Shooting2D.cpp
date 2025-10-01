@@ -118,11 +118,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     return (int)msg.wParam;
 }
 
-//
 //  함수: MyRegisterClass()
-//
 //  용도: 창 클래스를 등록합니다.
-//
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
     // 윈도우의 모양과 기본동작 등을 결정
