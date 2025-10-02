@@ -81,6 +81,12 @@
     <ClInclude Include="PhysicsComponent.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Bomb.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="BombSpawner.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shooting2D.cpp">
@@ -111,6 +117,12 @@
       <Filter>ActorType\Test</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsComponent.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Bomb.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="BombSpawner.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
