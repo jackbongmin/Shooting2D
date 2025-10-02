@@ -2,6 +2,8 @@
 #include "Background.h"
 #include "Player.h"
 #include "TestGridActor.h"
+#include "ResourceManager.h"
+#include "Factory.h"
 
 void GameManager::Initialize()
 {
@@ -14,19 +16,21 @@ void GameManager::Initialize()
         MessageBox(hMainWindow, L"백 버퍼 그래픽스 생성 실패", L"오류", MB_OK | MB_ICONERROR);
     }
 
-    Background* background = new Background(L"./Images/Background.png");
-    background->SetRenderLayer(RenderLayer::Background);
-    AddActor(new Background(L"./Images/Background.png"));
-    MainPlayer = new Player(L"./Images/Airplane.png");
-    AddActor(MainPlayer);
-    AddActor(new TestGridActor());
+    MainPlayer = Factory::Get().SpawnActor<Player>(ResourceID::Player, RenderLayer::Player);
+    Factory::Get().SpawnActor<Background>(ResourceID::Background, RenderLayer::Background);
+    TestGrid = Factory::Get().SpawnActor<TestGridActor>(ResourceID::None, RenderLayer::Test);
 }
 
 void GameManager::Destroy()
 {
-    for (Actor* Actor : Actors)
+    for (auto pair : Actors)
     {
-        delete Actor;
+        for (Actor* actor : pair.second)
+        {
+            actor->OnDestroy();
+            delete actor;
+        }
+        pair.second.clear();
     }
     Actors.clear();
 
@@ -38,10 +42,14 @@ void GameManager::Destroy()
 
 void GameManager::Tick(float InDeltaTime)
 {
-    for (Actor* Actor : Actors)
+    for (const auto& pair : Actors)
     {
-        Actor->OnTick(InDeltaTime);
+        for (Actor* actor : pair.second)
+        {
+            actor->OnTick(InDeltaTime);
+        }
     }
+    ProcessPendingDestroyActors();  // 삭제 예정인 액터들을 모두 삭제
 }
 
 void GameManager::Render()
@@ -50,9 +58,12 @@ void GameManager::Render()
     {
         BackBufferGraphics->Clear(Gdiplus::Color(255, 0, 0, 0));
 
-        for (Actor* Actor : Actors)
+        for (const auto& pair : Actors)
         {
-            Actor->OnRender(BackBufferGraphics);
+            for (Actor* actor : pair.second)
+            {
+                actor->OnRender(BackBufferGraphics);
+            }
         }
     }
 }
@@ -60,4 +71,52 @@ void GameManager::Render()
 void GameManager::HandleKeyState(WPARAM InKey, bool InIsPressed)
 {
     MainPlayer->HandleKeyState(InKey, InIsPressed);
+
+    if (TestGrid)
+    {
+        TestGrid->DestroyActor();
+        TestGrid = nullptr;
+    }
+}
+
+void GameManager::RegistActor(RenderLayer InLayer, Actor* InActor)
+{
+    if (InActor)
+    {
+        Actors[InLayer].insert(InActor);
+    }
+}
+
+void GameManager::UnregisteActor(Actor* InActor)
+{
+    std::set<Actor*>& actorSet = Actors[InActor->GetRenderLayer()];
+    actorSet.erase(InActor);
+
+
+    //for (size_t i = 0; i < actorSet.size(); i++)
+    //{
+    //    if (actorSet[i] == InActor)
+    //    {
+    //        if (i < actorSet.size() - 1)//마지막이 아니면
+    //        {
+    //            std::swap(actorSet[i], actorSet.back());
+    //        }
+    //        actorSet.pop_back();
+    //        break;
+    //    }
+    //}
+}
+
+void GameManager::ProcessPendingDestroyActors()
+{
+    for (Actor* actor : PendingDestroyActors)
+    {
+        if (actor)
+        {
+            UnregisteActor(actor);
+            actor->OnDestroy();
+            delete actor;
+        }
+    }
+    PendingDestroyActors.clear();
 }
