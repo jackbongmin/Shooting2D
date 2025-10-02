@@ -1,6 +1,6 @@
 #pragma once
-#include <cstdint>
 #include <Windows.h>
+#include <cstdint>
 
 enum class InputDirection : uint8_t
 {
@@ -11,7 +11,7 @@ enum class InputDirection : uint8_t
 	Right = VK_RIGHT
 };
 
-enum class RenderLayer
+enum class RenderLayer : uint8_t
 {
 	Background = 0,
 	Player,
@@ -38,5 +38,25 @@ enum class ResourceID : uint8_t
 	Number8,
 	Number9,
 	Dot,
+	Test,
 	// 이미지가 추가되면 enum 추가
+};
+
+enum class CollisionType
+{
+	Circle,
+	Rectangle
+};
+
+enum class PhysicsLayer
+{
+	None = 0,
+	Player,
+	Bomb
+};
+
+enum class GameState
+{
+	Playing,
+	GameOver
 };
