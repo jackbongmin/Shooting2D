@@ -16,7 +16,7 @@ bool PhysicsComponent::IsCollision(PhysicsComponent* InOther) const
 		switch (Collision)
 		{
 		case CollisionType::Circle:
-			Result = CheckCircleToCircleCollision(this, InOther);
+			Result = CheckCircltToCircleCollision(this, InOther);
 			break;
 		case CollisionType::Rectangle:
 			Result = CheckRectToRectCollision(this, InOther);
@@ -31,7 +31,7 @@ bool PhysicsComponent::IsCollision(PhysicsComponent* InOther) const
 	return Result;
 }
 
-bool PhysicsComponent::CheckCircleToCircleCollision(const PhysicsComponent* InFrom, const PhysicsComponent* InTo)
+bool PhysicsComponent::CheckCircltToCircleCollision(const PhysicsComponent* InFrom, const PhysicsComponent* InTo)
 {
 	if (!InFrom || !InTo)
 		return false;

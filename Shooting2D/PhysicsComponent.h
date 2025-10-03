@@ -23,7 +23,7 @@ public:
 	inline void SetHeight(float height) { Data1 = height; } // 사각형 충돌의 높이 설정
 
 private:
-	static bool CheckCircleToCircleCollision(const PhysicsComponent* InFrom, const PhysicsComponent* InTo);
+	static bool CheckCircltToCircleCollision(const PhysicsComponent* InFrom, const PhysicsComponent* InTo);
 	static bool CheckRectToRectCollision(const PhysicsComponent* InFrom, const PhysicsComponent* InTo);
 	static bool CheckCircleToRectCollision(const PhysicsComponent* InFrom, const PhysicsComponent* InTo);
 

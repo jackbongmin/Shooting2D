@@ -66,7 +66,7 @@ private:
 
 	Player* MainPlayer = nullptr;
 	BombSpawner* Spawner = nullptr;
-	TimerUI* Timert = nullptr;
+	TimerUI* Timer = nullptr;
 
 	TestGridActor* TestGrid = nullptr;
 

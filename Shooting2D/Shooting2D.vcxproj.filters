@@ -25,6 +25,9 @@
     <Filter Include="Component">
       <UniqueIdentifier>{474317b9-bac9-4d8b-babb-109a9ca76dff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UserInterface">
+      <UniqueIdentifier>{bed50bf8-6bbd-45fa-b41d-33600417a20d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shooting2D.h">
@@ -78,14 +81,20 @@
     <ClInclude Include="Component.h">
       <Filter>Component</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicsComponent.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Bomb.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>ActorType</Filter>
     </ClInclude>
     <ClInclude Include="BombSpawner.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>ActorType</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerUI.h">
+      <Filter>UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface.h">
+      <Filter>UserInterface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -116,14 +125,20 @@
     <ClCompile Include="TestCollisionActor.cpp">
       <Filter>ActorType\Test</Filter>
     </ClCompile>
-    <ClCompile Include="PhysicsComponent.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Bomb.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>ActorType</Filter>
     </ClCompile>
     <ClCompile Include="BombSpawner.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>ActorType</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerUI.cpp">
+      <Filter>UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface.cpp">
+      <Filter>UserInterface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
